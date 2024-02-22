@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tic Tac Toe</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .board {
+        border-collapse: collapse;
+    }
+    .board td {
+        width: 100px;
+        height: 100px;
+        border: 2px solid black;
+        text-align: center;
+        font-size: 24px;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <table class="board">
+        <tr>
+            <td onclick="cellClicked(0, 0)"></td>
+            <td onclick="cellClicked(0, 1)"></td>
+            <td onclick="cellClicked(0, 2)"></td>
+        </tr>
+        <tr>
+            <td onclick="cellClicked(1, 0)"></td>
+            <td onclick="cellClicked(1, 1)"></td>
+            <td onclick="cellClicked(1, 2)"></td>
+        </tr>
+        <tr>
+            <td onclick="cellClicked(2, 0)"></td>
+            <td onclick="cellClicked(2, 1)"></td>
+            <td onclick="cellClicked(2, 2)"></td>
+        </tr>
+    </table>
+</div>
+<script>
+    let currentPlayer = 'X';
+    let board = [
+        ['', '', ''],
+        ['', '', ''],
+        ['', '', '']
+    ];
+
+    function cellClicked(row, col) {
+        if (board[row][col] === '') {
+            board[row][col] = currentPlayer;
+            document.getElementsByTagName('td')[row * 3 + col].innerText = currentPlayer;
+            checkWinner();
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        }
+    }
+
+    function checkWinner() {
+        const winConditions = [
+            [[0, 0], [0, 1], [0, 2]],
+            [[1, 0], [1, 1], [1, 2]],
+            [[2, 0], [2, 1], [2, 2]],
+            [[0, 0], [1, 0], [2, 0]],
+            [[0, 1], [1, 1], [2, 1]],
+            [[0, 2], [1, 2], [2, 2]],
+            [[0, 0], [1, 1], [2, 2]],
+            [[0, 2], [1, 1], [2, 0]]
+        ];
+
+        for (const condition of winConditions) {
+            const [a, b, c] = condition;
+            if (board[a[0]][a[1]] !== '' && board[a[0]][a[1]] === board[b[0]][b[1]] && board[a[0]][a[1]] === board[c[0]][c[1]]) {
+                alert(`Player ${board[a[0]][a[1]]} wins!`);
+                resetBoard();
+                return;
+            }
+        }
+
+        if (board.every(row => row.every(cell => cell !== ''))) {
+            alert("It's a tie!");
+            resetBoard();
+        }
+    }
+
+    function resetBoard() {
+        board = [
+            ['', '', ''],
+            ['', '', ''],
+            ['', '', '']
+        ];
+        currentPlayer = 'X';
+        const cells = document.getElementsByTagName('td');
+        for (const cell of cells) {
+            cell.innerText = '';
+        }
+    }
+</script>
+</body>
+</html>
